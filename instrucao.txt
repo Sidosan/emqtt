@@ -1,0 +1,6 @@
+#copiar pastas mestres de dentro do docker:emqtt
+
+$ docker cp emqtt:/opt/emqx/etc E:\Dev\IoT\controle-pessoas\emqx\vol-emqx 
+$ docker cp emqtt:/opt/emqx/lib E:\Dev\IoT\controle-pessoas\emqx\vol-emqx 
+$ docker cp emqtt:/opt/emqx/data E:\Dev\IoT\controle-pessoas\emqx\vol-emqx 
+

@@ -1,0 +1,58 @@
+volumes:
+    vol-emqx-data:
+      name: foo-emqx-data
+    vol-emqx-etc:
+      name: foo-emqx-etc
+    vol-emqx-log:
+      name: foo-emqx-log
+      
+services:
+    emqx:
+        container_name: emqtt
+        restart: always
+        image: emqx/emqx
+        ports:
+            - 1883:1883
+            - 8083:8083
+            - 8084:8084
+            - 8080:8080
+            - 18083:18083
+        environment:
+            EMQX_NAME: emqx
+            EMQX_HOST: 127.0.0.1
+            EMQX_ALLOW_ANONYMOUS: "false"
+            EMQX_LOADED_PLUGINS: emqx_auth_mongo
+            EMQX_AUTH__MONGO__SERVER: 192.168.0.46:27017
+            EMQX_AUTH__MONGO__LOGIN: "emqx"
+            EMQX_AUTH__MONGO__PASSWORD: "admin"
+            EMQX_AUTH__MONGO__DATABASE: "mqtt"
+            EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_FIEL: "password"
+            EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_HASH: "plain" 
+            EMQX_AUTH__MONGO__QUERY_TIMEOUT: "5s"
+            EMQX_AUTH__MONGO__ACL_QUERY: "on"
+        volumes:
+            - ./vol-emqx/root:/root
+            - ./vol-emqx/etc/:/opt/emqx/etc/
+        links: 
+            - db
+    db:
+        image: mongo
+        restart: always
+        expose:
+            - 27017
+        ports:
+            - 27017:27017
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: admin
+        volumes:
+            - ./mongo-volume:/data/db
+ 
+
+
+
+
+    
+
+    
+    

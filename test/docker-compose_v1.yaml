@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  emqx1:
+    container_name: emqx
+    image: emqx/emqx
+    
+    ports:
+       - "1883:1883"
+       - "18083:18083"
+       - "8083:8083"
+        
+    environment:
+      EMQX_NAME: emqx
+      EMQX_HOST: 127.0.0.1
+
+
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mqtt_user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+

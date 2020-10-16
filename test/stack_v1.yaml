@@ -1,0 +1,54 @@
+version: '3.5'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    expose:
+      - "27017"
+    ports:
+      - "27017:27017"
+
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: admin   
+    networks:
+      - mongo-compose-network  
+      
+  emqx1:
+    container_name: emqx
+    restart: always
+    image: emqx/emqx:latest
+ 
+    ports:
+       - "1883:1883"
+       - "18083:18083"
+       - "8083:8083"
+       
+       - "8084:8084"
+       - "8883:8883"
+       - "11883:11883"
+        
+    environment:
+      EMQX_NAME: emqx
+      EMQX_HOST: 127.0.0.1
+      EMQX_ALLOW_ANONYMOUS: "false"
+      EMQX_LISTENER__WS__EXTERNAL: 8083
+      EMQX_LOADED_PLUGINS: emqx_auth_mongo
+      EMQX_AUTH__MONGO__SERVER: 127.0.0.1:27017
+      EMQX_AUTH__MONGO__LOGIN: "root"
+      EMQX_AUTH__MONGO__PASSWORD: "admin"
+      EMQX_AUTH__MONGO__AUTH_SOURCE: "root"
+      EMQX_AUTH__MONGO__DATABASE: "mqtt"
+      EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_HASH: plain 
+      EMQX_auth__mongo__query_timeout: 5s
+    links:
+      - mongo
+    networks:
+      - mongo-compose-network
+      
+networks: 
+    mongo-compose-network:
+      driver: bridge
+      
+      
